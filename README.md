@@ -7,7 +7,7 @@ https://www.epiusers.help/t/something-im-thinking-of-working-on/103807
 This is a plugin based, dynamic Kinetic app that will download pretty much whatever you want as a zip file, provided there is a plugin for it....
 
 **Video:**
-![ExportAllTheThingsAgaiin|690x348](upload://cSLyWD0FrIeI83ZFnHgHW1GDnYQ.gif)
+![ExportAllTheThingsAgaiin|690x348](https://www.epiusers.help/uploads/default/original/3X/5/a/5a4af497ffbc3981af8754cab2f8a64f2664e960.gif)
 
 **Current Example:** (at release)
 ![image|690x432](upload://dRGBTfA0hC10Hq2fWvsFjfvZARt.png)
