@@ -114,7 +114,7 @@
                     "param": {
                         "specialFolder": 5,
                         "transferType": "download",
-                        "company": "MS67964",
+                        "company": "COMPANY",
                         "serverPath": "EATT://TemplatePath",
                         "clientPath": "Wut"
                     }
