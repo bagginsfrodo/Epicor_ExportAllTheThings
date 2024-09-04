@@ -10,7 +10,7 @@ This is a plugin based, dynamic Kinetic app that will download pretty much whate
 ![ExportAllTheThingsAgaiin|690x348](https://www.epiusers.help/uploads/default/original/3X/5/a/5a4af497ffbc3981af8754cab2f8a64f2664e960.gif)
 
 **Current Example:** (at release)
-![image|690x432](upload://dRGBTfA0hC10Hq2fWvsFjfvZARt.png)
+![image|690x432](https://www.epiusers.help/uploads/default/original/3X/6/1/612de12b26e50738a76e883eb0558577a26ab0eb.png)
 
 
 # Plugins at Release:
@@ -25,14 +25,13 @@ This is a plugin based, dynamic Kinetic app that will download pretty much whate
 # Files
 
 **Kinetic App Template**
-* [ExportAllTheThingsTemplate_MetaUIs.zip|attachment](upload://7kNbwsae1usDjHDjXNmszUV08cd.zip) (2.9 KB)
+* placeholder
 
 **BPMs**
-* [ExportAllTheThings.bpm|attachment](upload://jolss7bkPxcc16FQ6IFyl7SM4PG.bpm) (23.9 KB)
+* placeholder
 
 **Function Libraries** (Pick your poison lol)
-* [ExportAllTheThings.efxb|attachment](upload://oDvT047xz0g5TgGdhCiiz2jQWE3.efxb) (41.6 KB)
-* [ExportAllTheThings.efxj.json|attachment](upload://mhMhd0bApleJrzUUQyp638yTjCG.json) (44.1 KB) <- Remove **.json**
+* placeholder
 
 **Instructions:**
 * Import the files above.
