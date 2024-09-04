@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemas.developer.epicor.com/schemas/v4.0/dataviews.json",
+  "contentVersion": "4.0",
+  "imports": [],
+  "dataviews": []
+}
