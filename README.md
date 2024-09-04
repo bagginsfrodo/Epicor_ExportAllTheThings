@@ -21,22 +21,8 @@ This is a plugin based, dynamic Kinetic app that will download pretty much whate
 * ExportDirectivesByGroups
 * ExportMethodDirectivesByService
 
-
-# Files
-
-**Kinetic App Template**
-* placeholder
-
-**BPMs**
-* placeholder
-
-**Function Libraries** (Pick your poison lol)
-* placeholder
-
 **Instructions:**
-* Import the files above.
-* (Don't forget to add your company to the security in the library.)
-* Create a menu item for the Template.
+* Binaries are in this thread: [:star2: ExportAllTheThings - Export Your Custom Objects](https://www.epiusers.help/t/exportallthethings-export-your-custom-objects/118456)
 * Profit
 
 ![star trek rom GIF|245x188](https://media2.giphy.com/media/V9o7jZWjSRqGk/giphy.webp?cid=e90edba37uc1j6wj39xfj9kqa2ij6l4a81u7t6la85ww668n&ep=v1_gifs_search&rid=giphy.webp&ct=g)
