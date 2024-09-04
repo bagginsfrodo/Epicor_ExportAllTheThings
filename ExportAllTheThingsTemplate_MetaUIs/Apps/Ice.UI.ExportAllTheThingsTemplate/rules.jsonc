@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemas.developer.epicor.com/schemas/v3.0/rules.json",
+  "contentVersion": "3.0",
+  "imports": [],
+  "rules": []
+}

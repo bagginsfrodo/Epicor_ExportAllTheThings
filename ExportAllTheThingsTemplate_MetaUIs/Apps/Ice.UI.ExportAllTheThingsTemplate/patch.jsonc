@@ -1,0 +1,6 @@
+{
+  "$schema": "https://schemas.developer.epicor.com/schemas/v2.0/patch.json",
+  "contentVersion": "2.0",
+  "imports": [],
+  "patch": []
+}
