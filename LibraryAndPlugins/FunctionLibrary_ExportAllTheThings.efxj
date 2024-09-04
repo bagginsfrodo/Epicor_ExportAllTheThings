@@ -1,4 +1,4 @@
-﻿{
+{
     "Mode": "Backup",
     "Version": "4.3.100",
     "SystemCode": "ERP",
@@ -8,7 +8,7 @@
         "Description": "This library host plugins that export items to zip files and builds a Kinetic App based off of a template to run those plugins.",
         "GlobalID": "182889f5-1ae8-4bb7-8405-2fd99b2becd8",
         "EpicorVersion": "4.2.300",
-        "Revision": 185,
+        "Revision": 205,
         "Published": false,
         "Private": false,
         "Disabled": false,
@@ -17,7 +17,7 @@
         "AllowCustomCodeFunctions": true,
         "DirectDBAccess": 2,
         "Notes": "/*\n* ==========================================================================================\n* AUTHOR:    Kevin Lincecum\n* COPYRIGHT: Kevin Lincecum 2024\n* LICENSE:   MIT\n* ==========================================================================================\n* Library: ExportAllTheThings\n* Description: This library host plugins that export items to zip files and builds a Kinetic App based off of a template to\n*                     run those plugins.\n*\n* ==========================================================================================\n* \n* Hi Mom!\n*\n* CHANGELOG:\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\n*\n* ==========================================================================================\n*/\n\n\n",
-        "OwnedByCompany": "YOURCOMPANY",
+        "OwnedByCompany": "COMPANY",
         "Owner": "KLINCECUM",
         "Functions": [
             {
@@ -69,6 +69,82 @@
                 "Invalid": false,
                 "Thumbnail": null,
                 "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllFunctionLibraries\\r\\n* Description: This plugin downloads all Function Libraries.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n\\r\\n  //Can't make this damn thing directly, wtf?\\r\\n  Func<(int kind, string startsWith, int rollOutMode, int status), Ice.Lib.EfxLibraryDesigner.LibrarySearchOptions> CreateLibrarySearchOptions = (input) =>\\r\\n  {\\r\\n      return JsonConvert.DeserializeObject<Ice.Lib.EfxLibraryDesigner.LibrarySearchOptions>( JsonConvert.SerializeObject(new {input.kind, input.startsWith, input.rollOutMode, input.status}) );\\r\\n  };\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.EfxLibraryDesignerSvcContract>(efxLD =>\\r\\n     {\\r\\n        //Files we will be adding to the zip file     \\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>(); \\r\\n     \\r\\n        //Get all Function Libraries\\r\\n        var librarySearchOptions = CreateLibrarySearchOptions((kind: 1, startsWith: \\\"\\\", rollOutMode: 2, status: 2));\\r\\n    \\r\\n        EfxLibrarySearchTableset libraries = efxLD.GetLibraryList(librarySearchOptions);\\r\\n        \\r\\n        EfxLibraryTableset defaults = efxLD.GetDefaults();\\r\\n        \\r\\n        System.Version version = new System.Version($\\\"{defaults.EfxLibrary.FirstOrDefault().EpicorVersion}.{defaults.EfxLibrary.FirstOrDefault().Revision}\\\");\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(var item in libraries.EfxLibraryList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                //Export the Library and get the binary data.\\r\\n                var exportOptions = new Ice.Lib.EfxLibraryDesigner.ExportOptions()\\r\\n                {\\r\\n                    Mode = 0, Format = (Ice.Lib.EfxLibraryDesigner.ExportFileFormat)1, Package = null, PackageVersion = version, Publisher = Session.UserID, InstallAsHidden = false\\r\\n                };\\r\\n\\r\\n                byte[] itemBytes = efxLD.ExportLibrary(item.LibraryID, exportOptions);\\r\\n                \\r\\n                //Convert the data to a Base64 encoded string.\\r\\n                string itemBase64 = Convert.ToBase64String(itemBytes);\\r\\n                \\r\\n                //Add the data as a file in the zip.\\r\\n                mainZipFileDictionary.Add($\\\"{item.LibraryID}.efxj\\\", itemBase64);\\r\\n\\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"LibraryID\\\", item.LibraryID);\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }\\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n\\r\\n     });\\r\\n     \\r\\n     Success = true;\\r\\n    \\r\\n     \\r\\n  //****\\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n finally\\r\\n {\\r\\n      //Maybe later?\\r\\n }\\r\\n\\r\\n\\r\\n\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportAllKineticCustomLayers",
+                "Description": "This plugin downloads all custom Kinetic layers.",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllKineticCustomLayers\\r\\n* Description: This plugin downloads all custom Kinetic layers.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 09/04/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n \\r\\n \\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.MetaFXSvcContract>(metaFX =>\\r\\n     {\\r\\n        //Create a request to list the apps       \\r\\n        var request = new Epicor.MetaFX.Core.Models.Applications.ApplicationRequest()\\r\\n        {\\r\\n            Type = \\\"view\\\",\\r\\n            SubType = \\\"\\\",\\r\\n            SearchText = \\\"\\\",\\r\\n            IncludeAllLayers = true\\r\\n        };\\r\\n\\r\\n        //Get a list of apps\\r\\n        List<Epicor.MetaFX.Core.Models.Applications.Application> applications = metaFX.GetApplications(request);\\r\\n        \\r\\n        //Create an export request list \\r\\n        List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication> applicationList = new List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication>();\\r\\n\\r\\n        //Loop through the list and add custom apps to the export list\\r\\n        foreach(var item in applications.Where(x => x.SystemFlag == false))\\r\\n        {\\r\\n            applicationList.Add(new Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication() { Id = item.Id });\\r\\n        }\\r\\n        \\r\\n        //Export the apps and return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = metaFX.ExportLayers(applicationList);\\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\",\"Usings\":\"using Ice.Assemblies;\\r\\nusing Newtonsoft.Json;\\r\\n\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportAllKineticSystemLayers",
+                "Description": "This plugin downloads all system Kinetic layers.",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllKineticSystemLayers\\r\\n* Description: This plugin downloads all system Kinetic layers.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 09/04/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n \\r\\n \\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.MetaFXSvcContract>(metaFX =>\\r\\n     {\\r\\n        //Create a request to list the apps       \\r\\n        var request = new Epicor.MetaFX.Core.Models.Applications.ApplicationRequest()\\r\\n        {\\r\\n            Type = \\\"view\\\",\\r\\n            SubType = \\\"\\\",\\r\\n            SearchText = \\\"\\\",\\r\\n            IncludeAllLayers = true\\r\\n        };\\r\\n\\r\\n        //Get a list of apps\\r\\n        List<Epicor.MetaFX.Core.Models.Applications.Application> applications = metaFX.GetApplications(request);\\r\\n        \\r\\n        //Create an export request list \\r\\n        List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication> applicationList = new List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication>();\\r\\n\\r\\n        //Loop through the list and add custom apps to the export list\\r\\n        foreach(var item in applications.Where(x => x.SystemFlag == true))\\r\\n        {\\r\\n            applicationList.Add(new Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication() { Id = item.Id });\\r\\n        }\\r\\n        \\r\\n        //Export the apps and return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = metaFX.ExportLayers(applicationList);\\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\",\"Usings\":\"using Ice.Assemblies;\\r\\nusing Newtonsoft.Json;\\r\\n\"}",
                 "FunctionSignature": [
                     {
                         "Response": true,
@@ -336,6 +412,10 @@
         "LibraryReferences": [
             {
                 "ReferenceType": 0,
+                "ReferenceID": "Epicor.MetaFX.Core.dll"
+            },
+            {
+                "ReferenceType": 0,
                 "ReferenceID": "Newtonsoft.Json.dll"
             },
             {
@@ -353,6 +433,10 @@
             {
                 "ReferenceType": 2,
                 "ReferenceID": "ICE:Lib:EfxLibraryDesigner"
+            },
+            {
+                "ReferenceType": 2,
+                "ReferenceID": "ICE:Lib:MetaFX"
             }
         ]
     }
