@@ -1,0 +1,29 @@
+{
+  "$schema": "https://schemas.developer.epicor.com/schemas/v5.0/events.json",
+  "contentVersion": "5.0",
+  "imports": [],
+  "events": [
+    {
+      "trigger": {
+        "hook": "onClick",
+        "type": "Control",
+        "target": "btnDownload"
+      },
+      "actions": [
+        {
+          "type": "file-transfer-erp",
+          "param": {
+            "specialFolder": 5,
+            "transferType": "download",
+            "company": "COMPANY",
+            "serverPath": "EATT://TemplatePath",
+            "clientPath": "Wut"
+          }
+        }
+      ],
+      "id": "btnDownload_onClick",
+      "customizable": true,
+      "disable": false
+    }
+  ]
+}
