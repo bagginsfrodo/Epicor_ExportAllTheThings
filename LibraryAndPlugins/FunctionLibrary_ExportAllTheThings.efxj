@@ -1,0 +1,359 @@
+﻿{
+    "Mode": "Backup",
+    "Version": "4.3.100",
+    "SystemCode": "ERP",
+    "LibraryId": "ExportAllTheThings",
+    "Library": {
+        "OriginalID": "ExportAllTheThings",
+        "Description": "This library host plugins that export items to zip files and builds a Kinetic App based off of a template to run those plugins.",
+        "GlobalID": "182889f5-1ae8-4bb7-8405-2fd99b2becd8",
+        "EpicorVersion": "4.2.300",
+        "Revision": 185,
+        "Published": false,
+        "Private": false,
+        "Disabled": false,
+        "Mode": 0,
+        "AllowCustomCodeWidgets": true,
+        "AllowCustomCodeFunctions": true,
+        "DirectDBAccess": 2,
+        "Notes": "/*\n* ==========================================================================================\n* AUTHOR:    Kevin Lincecum\n* COPYRIGHT: Kevin Lincecum 2024\n* LICENSE:   MIT\n* ==========================================================================================\n* Library: ExportAllTheThings\n* Description: This library host plugins that export items to zip files and builds a Kinetic App based off of a template to\n*                     run those plugins.\n*\n* ==========================================================================================\n* \n* Hi Mom!\n*\n* CHANGELOG:\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\n*\n* ==========================================================================================\n*/\n\n\n",
+        "OwnedByCompany": "YOURCOMPANY",
+        "Owner": "KLINCECUM",
+        "Functions": [
+            {
+                "FunctionID": "ExportAllCustomBAQs",
+                "Description": "This plugin downloads all custom BAQs.",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllCustomBAQs\\r\\n* Description: This plugin downloads all custom BAQs.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n \\r\\n \\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.BAQDesignerSvcContract>(baqD =>\\r\\n     {\\r\\n     \\r\\n        //Files we will be adding to the zip file \\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>();\\r\\n     \\r\\n        //Get all BAQs that are not marked \\\"System\\\".\\r\\n        bool more = false;\\r\\n        BAQDesignerListTableset baqListTS = baqD.GetList(\\\"SystemFlag=false\\\", 0, 1, out more);\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(DynamicQueryDesignerListRow item in baqListTS.DynamicQueryDesignerList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                //Export the BAQ and get the binary data.\\r\\n                Dictionary<string, string> options = new Dictionary<string, string>();\\r\\n                List<string> logResult = new List<string>(); //Needed for export call.\\r\\n                \\r\\n                byte[] itemBytes = baqD.ExportBaq(item.QueryID, ref options, out logResult);\\r\\n                \\r\\n                //Convert the data to a Base64 encoded string.\\r\\n                string itemBase64 = Convert.ToBase64String(itemBytes);\\r\\n                \\r\\n                //Add the data as a file in the zip.\\r\\n                mainZipFileDictionary.Add($\\\"{item.QueryID}.baq\\\", itemBase64);\\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"QueryID\\\", item.QueryID);\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }            \\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n     \\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\",\"Usings\":\"using Ice.Assemblies;\\r\\nusing Newtonsoft.Json;\\r\\n\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportAllFunctionLibraries",
+                "Description": "This plugin downloads all Function Libraries.",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllFunctionLibraries\\r\\n* Description: This plugin downloads all Function Libraries.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n\\r\\n  //Can't make this damn thing directly, wtf?\\r\\n  Func<(int kind, string startsWith, int rollOutMode, int status), Ice.Lib.EfxLibraryDesigner.LibrarySearchOptions> CreateLibrarySearchOptions = (input) =>\\r\\n  {\\r\\n      return JsonConvert.DeserializeObject<Ice.Lib.EfxLibraryDesigner.LibrarySearchOptions>( JsonConvert.SerializeObject(new {input.kind, input.startsWith, input.rollOutMode, input.status}) );\\r\\n  };\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.EfxLibraryDesignerSvcContract>(efxLD =>\\r\\n     {\\r\\n        //Files we will be adding to the zip file     \\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>(); \\r\\n     \\r\\n        //Get all Function Libraries\\r\\n        var librarySearchOptions = CreateLibrarySearchOptions((kind: 1, startsWith: \\\"\\\", rollOutMode: 2, status: 2));\\r\\n    \\r\\n        EfxLibrarySearchTableset libraries = efxLD.GetLibraryList(librarySearchOptions);\\r\\n        \\r\\n        EfxLibraryTableset defaults = efxLD.GetDefaults();\\r\\n        \\r\\n        System.Version version = new System.Version($\\\"{defaults.EfxLibrary.FirstOrDefault().EpicorVersion}.{defaults.EfxLibrary.FirstOrDefault().Revision}\\\");\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(var item in libraries.EfxLibraryList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                //Export the Library and get the binary data.\\r\\n                var exportOptions = new Ice.Lib.EfxLibraryDesigner.ExportOptions()\\r\\n                {\\r\\n                    Mode = 0, Format = (Ice.Lib.EfxLibraryDesigner.ExportFileFormat)1, Package = null, PackageVersion = version, Publisher = Session.UserID, InstallAsHidden = false\\r\\n                };\\r\\n\\r\\n                byte[] itemBytes = efxLD.ExportLibrary(item.LibraryID, exportOptions);\\r\\n                \\r\\n                //Convert the data to a Base64 encoded string.\\r\\n                string itemBase64 = Convert.ToBase64String(itemBytes);\\r\\n                \\r\\n                //Add the data as a file in the zip.\\r\\n                mainZipFileDictionary.Add($\\\"{item.LibraryID}.efxj\\\", itemBase64);\\r\\n\\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"LibraryID\\\", item.LibraryID);\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }\\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n\\r\\n     });\\r\\n     \\r\\n     Success = true;\\r\\n    \\r\\n     \\r\\n  //****\\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n finally\\r\\n {\\r\\n      //Maybe later?\\r\\n }\\r\\n\\r\\n\\r\\n\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportAllUDCodes",
+                "Description": "This plugin exports all UD Codes. (User Codes)",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportAllUDCodes\\r\\n* Description: This plugin exports all UD Codes. (User Codes)\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n  \\r\\n  //Serialize a whole Tableset to B64 \\r\\n  Func<IceTableset, string> GetTablesetBytesAsB64 = (ts) =>\\r\\n  {\\r\\n      string tempJson = JsonConvert.SerializeObject(ts, Formatting.Indented);\\r\\n        \\r\\n      byte[] tempBytes = System.Text.Encoding.UTF8.GetBytes(tempJson);\\r\\n        \\r\\n      return Convert.ToBase64String(tempBytes);\\r\\n  };\\r\\n \\r\\n \\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.UserCodesSvcContract>(udCode =>\\r\\n     {\\r\\n     \\r\\n        //Files we will be adding to the zip file     \\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>();\\r\\n\\r\\n        //Get All UD Codes\\r\\n        bool morePages = false;\\r\\n        UserCodesTableset udCodeTS = udCode.GetRows(\\\"\\\", \\\"\\\", 0, 0, out morePages);\\r\\n      \\r\\n        //Add all to zip file\\r\\n        mainZipFileDictionary.Add(\\\"AllCodes.json\\\", GetTablesetBytesAsB64(udCodeTS));\\r\\n\\r\\n      \\r\\n        //Get Distinct List of UDCode Types\\r\\n        var udCodeTypes = udCodeTS.UDCodeType.Select(x => x.CodeTypeID).Distinct().ToList();\\r\\n        \\r\\n        \\r\\n        //Add Individual codes by CodeTypeID to zip file        \\r\\n        foreach(var codeType in udCodeTypes)\\r\\n        {\\r\\n            //Need something to dump it into\\r\\n            UserCodesTableset tempUDCodeTS = new UserCodesTableset();\\r\\n            \\r\\n            //Filter to the individual CodeTypeID and cheat using Newtonsoft to do the copy\\r\\n            UDCodesTable filteredUDCodesTable = JsonConvert.DeserializeObject<UDCodesTable>(JsonConvert.SerializeObject(udCodeTS.UDCodes.Where(x => x.CodeTypeID == codeType)));\\r\\n            UDCodeTypeTable filteredUDCodeTypeTable = JsonConvert.DeserializeObject<UDCodeTypeTable>(JsonConvert.SerializeObject(udCodeTS.UDCodeType.Where(x => x.CodeTypeID == codeType)));\\r\\n            \\r\\n            //Add the ranges back to the TS\\r\\n            tempUDCodeTS.UDCodes.AddRange(filteredUDCodesTable);\\r\\n            tempUDCodeTS.UDCodeType.AddRange(filteredUDCodeTypeTable);\\r\\n            \\r\\n            //Zip the files\\r\\n            Dictionary<string, string> perCodeTypeFileDictionary = new Dictionary<string, string>();\\r\\n            \\r\\n            perCodeTypeFileDictionary.Add($\\\"{codeType}.json\\\", GetTablesetBytesAsB64(tempUDCodeTS));\\r\\n            \\r\\n            string perCodefileDictionaryJson = JsonConvert.SerializeObject(perCodeTypeFileDictionary);\\r\\n        \\r\\n            string perCodeZipBase64 = ThisLib.ZipFiles(perCodefileDictionaryJson);\\r\\n            \\r\\n            //Add to the MAIN zip file\\r\\n            mainZipFileDictionary.Add($\\\"{codeType}.zip\\\", perCodeZipBase64);\\r\\n        }\\r\\n\\r\\n        //Zip the files (The main one)\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n     \\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\",\"Usings\":\"using Ice.Assemblies;\\r\\nusing Newtonsoft.Json;\\r\\n\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportDataDirectivesByTable",
+                "Description": "This plugin downloads all Data Directives by \"Table\".",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportDataDirectivesByTable\\r\\n* Description: This plugin downloads all Data Directives by \\\"Table\\\".\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.BpMethodSvcContract>(bpMethod =>\\r\\n     {\\r\\n        //Files we will be adding to the zip file     \\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>(); \\r\\n     \\r\\n        //Get All Data Directives\\r\\n        bool morePages = false;\\r\\n        Ice.Tablesets.BpMethodListTableset methodTS = bpMethod.GetList(\\\"Source = 'DB'\\\", 0, 0, out morePages);\\r\\n        \\r\\n        //Create a Distinct List of Data Directive Methods\\r\\n        var methodsList = methodTS.BpMethodList.Select(x => new { x.SystemCode, x.BusinessObject }).ToList().Distinct();\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(var item in methodsList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                 //Export the Data Directive\\r\\n                 byte[] itemBytes = bpMethod.ExportByTable(item.SystemCode, item.BusinessObject).Data;\\r\\n                      \\r\\n                 //Convert the data to a Base64 encoded string.           \\r\\n                 string itemBase64 = Convert.ToBase64String(itemBytes);\\r\\n                 \\r\\n                 //Add the data as a file in the zip.           \\r\\n                 mainZipFileDictionary.Add($\\\"{item.SystemCode}.{item.BusinessObject}.bpm\\\", itemBase64);\\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"Table\\\", $\\\"{item.SystemCode}.{item.BusinessObject}.bpm\\\");\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }          \\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n     \\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n    \\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\\r\\n\\r\\n\\r\\n\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportDirectivesByGroups",
+                "Description": "This plugin downloads all Method AND Data Directives by \"Group\".",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportDirectivesByGroups\\r\\n* Description: This plugin downloads all Method AND Data Directives by \\\"Group\\\".\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n//Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.BpMethodSvcContract>(bpMethod =>\\r\\n     {\\r\\n        //Files we will be adding to the zip file\\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>();\\r\\n        \\r\\n        //Get All Directive Groups \\r\\n        List<string> groupList = bpMethod.GetDirectiveGroups(\\\"BO,DB\\\").ToList();\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(var item in groupList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                //Export the group and get the binary data.\\r\\n                byte[] itemBytes = bpMethod.ExportByDirectiveGroup(item).Data;\\r\\n                \\r\\n                //Convert the data to a Base64 encoded string.                \\r\\n                string itemBase64 = Convert.ToBase64String(itemBytes);\\r\\n               \\r\\n                //Create an appropriate file name.\\r\\n                string filename = String.IsNullOrEmpty(item) ? \\\"Ungrouped\\\" : item;\\r\\n\\r\\n                //Add the data as a file in the zip.           \\r\\n                mainZipFileDictionary.Add($\\\"{filename}.bpm\\\", itemBase64);\\r\\n            \\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"Group\\\", item);\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }           \\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n     \\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\\r\\n\\r\\n\\r\\n\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ExportMethodDirectivesByService",
+                "Description": "This plugin downloads all Method Directives by \"Service\".",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ExportMethodDirectivesByService\\r\\n* Description: This plugin downloads all Method Directives by \\\"Service\\\".\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS: NONE\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: ZipBase64      -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n  \\r\\n     CallService<Ice.Contracts.BpMethodSvcContract>(bpMethod =>\\r\\n     {\\r\\n        //Files we will be adding to the zip file\\r\\n        Dictionary<string, string> mainZipFileDictionary = new Dictionary<string, string>(); \\r\\n     \\r\\n        //Get all Directives for a \\\"Service\\\". (Also exclude BAQ BPMs)\\r\\n        bool morePages = false;\\r\\n        Ice.Tablesets.BpMethodListTableset methodTS = bpMethod.GetList(\\\"Source = 'BO' AND ObjectNS <> ''\\\", 0, 0, out morePages);\\r\\n        \\r\\n        //Create a unique list to process.\\r\\n        var methodsList = methodTS.BpMethodList.Select(x => new { x.SystemCode, x.ObjectNS, x.BusinessObject }).ToList().Distinct();\\r\\n        \\r\\n        //Loop through the list.\\r\\n        foreach(var item in methodsList)\\r\\n        {\\r\\n            try\\r\\n            {\\r\\n                //Export the directive and get the binary data.\\r\\n                byte[] zipMethodBytes = bpMethod.ExportByService(item.SystemCode, item.ObjectNS, item.BusinessObject).Data;\\r\\n                \\r\\n                //Convert the data to a Base64 encoded string.                \\r\\n                string methodZipBase64 = Convert.ToBase64String(zipMethodBytes);\\r\\n\\r\\n                //Add the data as a file in the zip.\\r\\n                mainZipFileDictionary.Add($\\\"{item.SystemCode}.{item.ObjectNS}.{item.BusinessObject}.bpm\\\", methodZipBase64);\\r\\n            }\\r\\n            catch (Exception iEx)\\r\\n            {\\r\\n                //Continue processing on error, but add errors to the errors list.\\r\\n                iEx.Data.Add(\\\"Service\\\", $\\\"{item.SystemCode}.{item.ObjectNS}.{item.BusinessObject}\\\");\\r\\n                ListErrorJson = AddExceptionToList(iEx, ListErrorJson);\\r\\n            }             \\r\\n        }\\r\\n        \\r\\n        //Zip the files\\r\\n        string fileDictionaryJson = JsonConvert.SerializeObject(mainZipFileDictionary);\\r\\n        \\r\\n        //Return the zip file data as a Base64 encoded string.\\r\\n        ZipBase64 = ThisLib.ZipFiles(fileDictionaryJson);\\r\\n     \\r\\n     }); \\r\\n     \\r\\n     Success = true;\\r\\n     \\r\\n  //****   \\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false;\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\\r\\n  finally\\r\\n  {\\r\\n      //Maybe later?\\r\\n  }\\r\\n\\r\\n\\r\\n\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "GetApp",
+                "Description": "This function parses a template app and builds a full app based off of the plugins found in this library. These plugins export things as \"Zip\" Files.",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    GetApp\\r\\n* Description: This function parses a template app and builds a full app based off of the\\r\\n*              plugins found in this library. These plugins export things as \\\"Zip\\\" Files.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS:\\r\\n*   STRING: Request        -> The request for the app from the client   \\r\\n*   STRING: TemplateData   -> The json data for the template app\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   BOOL:   Success        -> Function Success / Failure\\r\\n*   STRING: ListErrorsJson -> Json Serialized List<Exception>\\r\\n*   STRING: appJson        -> Kinetic app Json data\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n  //Helper Functions Section----------------------------------------------------------------------------------------------------------------------------------------->\\r\\n  Func<Exception, string, string> AddExceptionToList = (exception, exceptionListJson) =>\\r\\n  {\\r\\n      List<Exception> exceptionList = new List<Exception>(){exception};\\r\\n      if(!String.IsNullOrEmpty(exceptionListJson)) { try { exceptionList.AddRange( JsonConvert.DeserializeObject<List<Exception>>(exceptionListJson) ); } catch {} }\\r\\n      return JsonConvert.SerializeObject(exceptionList);\\r\\n  };\\r\\n  //<-----------------------------------------------------------------------------------------------------------------------------------------Helper Functions Section  \\r\\n  \\r\\n  \\r\\n  //Use Newtonsoft to copy a token\\r\\n  Func<JToken, JToken> DuplicateToken = (token) => JToken.Parse(token.ToString());\\r\\n\\r\\n\\r\\n  try\\r\\n  {\\r\\n  //****\\r\\n\\r\\n      //Create a dictionary of \\\"plugins\\\" to build the app with\\r\\n      Dictionary<string, string> pluginDictionary = new Dictionary<string, string>();\\r\\n    \\r\\n      //Load the plugins into the dictionary\\r\\n      CallService<Ice.Contracts.EfxLibraryDesignerSvcContract>(efxLD =>\\r\\n      {\\r\\n          //We are loading plugins from this libary, so get a list of the functions.\\r\\n          var functionLibrary = efxLD.GetLibrary(LibraryID);\\r\\n          \\r\\n          //Populate the plugins dictionary. Only chose functions that begin with \\\"Export\\\".\\r\\n          pluginDictionary = functionLibrary.EfxFunction.Where(f => f.FunctionID.StartsWith(\\\"Export\\\")).ToDictionary(f1 => f1.FunctionID, f2 => f2.Description);\\r\\n      });\\r\\n    \\r\\n\\r\\n      //Parse the template data.\\r\\n      var app = JToken.Parse(TemplateData);\\r\\n      \\r\\n      //Get the body template section we are interested in. \\r\\n      var bodyComponentsTemplate = app[\\\"Layout\\\"][\\\"components\\\"][0][\\\"model\\\"][\\\"bodyComponents\\\"];\\r\\n      \\r\\n      //Clear template data from the array.\\r\\n      app[\\\"Layout\\\"][\\\"components\\\"][0][\\\"model\\\"][\\\"bodyComponents\\\"] = new JArray();\\r\\n      \\r\\n      \\r\\n      //Get the event template section we are interested in.\\r\\n      var eventTemplate = app[\\\"Events\\\"][0];\\r\\n      \\r\\n      //Clear template data from the array.\\r\\n      app[\\\"Events\\\"] = new JArray();\\r\\n      \\r\\n      \\r\\n      //We are doing rows down the page. Get that section.\\r\\n      var rowTemplate = bodyComponentsTemplate[0];\\r\\n      \\r\\n      //We will build a new row for each plugin.\\r\\n      foreach(var func in pluginDictionary)\\r\\n      {\\r\\n          var newRow = DuplicateToken(rowTemplate);\\r\\n      \\r\\n          //Row\\r\\n          newRow[\\\"id\\\"] = Guid.NewGuid();\\r\\n          newRow[\\\"model\\\"][\\\"guid\\\"] = newRow[\\\"id\\\"];\\r\\n          newRow[\\\"model\\\"][\\\"id\\\"] = $\\\"row{func.Key}\\\";\\r\\n          newRow[\\\"model\\\"][\\\"labelText\\\"] = func.Key;\\r\\n\\r\\n          //Left Column Components\\r\\n          newRow[\\\"components\\\"][0][\\\"id\\\"] = Guid.NewGuid();\\r\\n          newRow[\\\"components\\\"][0][\\\"model\\\"][\\\"guid\\\"] = newRow[\\\"components\\\"][0][\\\"id\\\"];\\r\\n          newRow[\\\"components\\\"][0][\\\"model\\\"][\\\"id\\\"] = $\\\"lc{func.Key}\\\";\\r\\n          newRow[\\\"components\\\"][0][\\\"parentId\\\"] = newRow[\\\"id\\\"];\\r\\n      \\r\\n          //Button\\r\\n          newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"id\\\"] = Guid.NewGuid();\\r\\n          newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"model\\\"][\\\"guid\\\"] = newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"id\\\"];\\r\\n          newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"model\\\"][\\\"id\\\"] = $\\\"btn{func.Key}\\\";\\r\\n          newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"parentId\\\"] = newRow[\\\"components\\\"][0][\\\"components\\\"][0][\\\"id\\\"];\\r\\n      \\r\\n          //Right Column Components\\r\\n          newRow[\\\"components\\\"][1][\\\"id\\\"] = Guid.NewGuid();\\r\\n          newRow[\\\"components\\\"][1][\\\"model\\\"][\\\"guid\\\"] = newRow[\\\"components\\\"][1][\\\"id\\\"];\\r\\n          newRow[\\\"components\\\"][1][\\\"model\\\"][\\\"id\\\"] = $\\\"rc{func.Key}\\\";\\r\\n          newRow[\\\"components\\\"][1][\\\"parentId\\\"] = newRow[\\\"id\\\"];\\r\\n      \\r\\n          //Plugin Description\\r\\n          newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"id\\\"] = Guid.NewGuid();\\r\\n          newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"model\\\"][\\\"guid\\\"] = newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"id\\\"];\\r\\n          newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"model\\\"][\\\"id\\\"] = $\\\"txt{func.Key}Description\\\";\\r\\n          newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"model\\\"][\\\"labelText\\\"] = func.Value;\\r\\n          newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"parentId\\\"] = newRow[\\\"components\\\"][1][\\\"components\\\"][0][\\\"id\\\"];\\r\\n      \\r\\n      \\r\\n          //Add row to app.\\r\\n          ((JArray)app[\\\"Layout\\\"][\\\"components\\\"][0][\\\"model\\\"][\\\"bodyComponents\\\"]).Add(newRow);\\r\\n          \\r\\n      \\r\\n          //Events\\r\\n          var newEvent = DuplicateToken(eventTemplate);\\r\\n      \\r\\n          //Add Event for each button / plugin.\\r\\n          newEvent[\\\"trigger\\\"][\\\"target\\\"] = $\\\"btn{func.Key}\\\";\\r\\n          newEvent[\\\"actions\\\"][0][\\\"param\\\"][\\\"serverPath\\\"] = $\\\"EATT://{func.Key}\\\";\\r\\n          newEvent[\\\"actions\\\"][0][\\\"param\\\"][\\\"clientPath\\\"] = $\\\"{func.Key}.zip\\\";\\r\\n          newEvent[\\\"id\\\"] = $\\\"btn{func.Key}_onClick\\\";\\r\\n      \\r\\n          //Add event to app.\\r\\n          ((JArray)app[\\\"Events\\\"]).Add(newEvent);\\r\\n      \\r\\n      }\\r\\n      \\r\\n      //Get the json for the app and return it.\\r\\n      appJson = app.ToString();\\r\\n      \\r\\n      Success = true; //Woot!\\r\\n\\r\\n  }\\r\\n  catch (Exception ex)\\r\\n  {\\r\\n      Success = false; //Meh\\r\\n      ListErrorJson = AddExceptionToList(ex, ListErrorJson);\\r\\n  }\",\"Usings\":\"using Newtonsoft.Json;\\r\\nusing Newtonsoft.Json.Linq;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": false,
+                        "ParameterID": 1,
+                        "ArgumentName": "Request",
+                        "Order": 1,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": false,
+                        "ParameterID": 2,
+                        "ArgumentName": "TemplateData",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "Success",
+                        "Order": 1,
+                        "DataType": "System.Boolean",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 2,
+                        "ArgumentName": "ListErrorJson",
+                        "Order": 2,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 3,
+                        "ArgumentName": "appJson",
+                        "Order": 3,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            },
+            {
+                "FunctionID": "ZipFiles",
+                "Description": "ZipFiles",
+                "Kind": 2,
+                "RequireTransaction": false,
+                "SingleRowMode": false,
+                "Private": false,
+                "Disabled": false,
+                "Invalid": false,
+                "Thumbnail": null,
+                "Body": "{\"Code\":\"/*\\r\\n* ==========================================================================================\\r\\n* AUTHOR:    Kevin Lincecum\\r\\n* COPYRIGHT: Kevin Lincecum 2024\\r\\n* LICENSE:   MIT\\r\\n* ==========================================================================================\\r\\n* Library:     ExportAllTheThings\\r\\n* Function:    ZipFiles    \\r\\n* Description: This is a utility function to \\\"Zip\\\" files.\\r\\n* ==========================================================================================\\r\\n* \\r\\n* INPUTS:\\r\\n*   STRING: fileDictionaryJson -> Json Encoded Dictionary<string, string> where the first\\r\\n*                                 string is the filename, and the second is a Base64\\r\\n*                                 endoded byte array with the file data.\\r\\n*\\r\\n* OUTPUTS:\\r\\n*   STRING: ZipBase64          -> Base64 Encoded Byte Array\\r\\n*\\r\\n* CHANGELOG:\\r\\n* 08/26/2024 | klincecum | Kevin Lincecum | Initial Implementation\\r\\n* 08/30/2024 | klincecum | Kevin Lincecum | Cleanup & Comments For Release\\r\\n*\\r\\n* ==========================================================================================\\r\\n*/\\r\\n\\r\\n\\r\\n  Func<Dictionary<string, string>, byte[]> ZipByteArray = (fileDict) =>\\r\\n  {\\r\\n      byte[] retBytes = null;\\r\\n      \\r\\n      using (MemoryStream zipMS = new MemoryStream())\\r\\n      {\\r\\n          using (ZipArchive zipArchive = new ZipArchive(zipMS, ZipArchiveMode.Create, true))\\r\\n          {\\r\\n              foreach(var file in fileDict)\\r\\n              {\\r\\n                  var zipArchiveEntry = zipArchive.CreateEntry(file.Key, CompressionLevel.NoCompression);\\r\\n                  \\r\\n                  using (var zipStream = zipArchiveEntry.Open())\\r\\n                  {\\r\\n                      byte[] fileBytes = Convert.FromBase64String(file.Value);\\r\\n                  \\r\\n                      zipStream.Write(fileBytes, 0, fileBytes.Length);\\r\\n                  }\\r\\n              }\\r\\n          }\\r\\n          \\r\\n          zipMS.Flush();\\r\\n          retBytes = zipMS.ToArray();\\r\\n      };\\r\\n      \\r\\n      return retBytes;    \\r\\n  };\\r\\n\\r\\n\\r\\n  Dictionary<string, string> fileDictionary = new Dictionary<string, string>();\\r\\n    \\r\\n  try\\r\\n  {\\r\\n      fileDictionary = JsonConvert.DeserializeObject<Dictionary<string, string>>(fileDictionaryJson); \\r\\n  }\\r\\n  catch {}\\r\\n  \\r\\n  if(fileDictionary.Count() < 1) return; //Get out of here\\r\\n  \\r\\n  byte[] zipBytes = ZipByteArray(fileDictionary);\\r\\n\\r\\n  ZipBase64 = Convert.ToBase64String(zipBytes);  \\r\\n  \\r\\n  \",\"Usings\":\"using Ice.Assemblies;\\r\\nusing System.IO;\\r\\nusing System.IO.Compression;\\r\\nusing Newtonsoft.Json;\"}",
+                "FunctionSignature": [
+                    {
+                        "Response": false,
+                        "ParameterID": 1,
+                        "ArgumentName": "fileDictionaryJson",
+                        "Order": 1,
+                        "DataType": "System.String",
+                        "Optional": false
+                    },
+                    {
+                        "Response": true,
+                        "ParameterID": 1,
+                        "ArgumentName": "ZipBase64",
+                        "Order": 1,
+                        "DataType": "System.String",
+                        "Optional": false
+                    }
+                ]
+            }
+        ],
+        "LibraryReferences": [
+            {
+                "ReferenceType": 0,
+                "ReferenceID": "Newtonsoft.Json.dll"
+            },
+            {
+                "ReferenceType": 2,
+                "ReferenceID": "ICE:BO:BAQDesigner"
+            },
+            {
+                "ReferenceType": 2,
+                "ReferenceID": "ICE:BO:BpMethod"
+            },
+            {
+                "ReferenceType": 2,
+                "ReferenceID": "ICE:BO:UserCodes"
+            },
+            {
+                "ReferenceType": 2,
+                "ReferenceID": "ICE:Lib:EfxLibraryDesigner"
+            }
+        ]
+    }
+}
