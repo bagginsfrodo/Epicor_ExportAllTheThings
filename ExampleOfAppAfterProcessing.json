@@ -1,0 +1,566 @@
+{
+    "AllowVersions": true,
+    "PersonalizationNotLoaded": false,
+    "HasOrphans": false,
+    "Layout": {
+        "name": "App",
+        "guid": "2dcd1674-5e34-4d98-b493-c75747027376",
+        "caption": "ExportAllTheThings",
+        "viewType": "Apps",
+        "pageType": "Responsive",
+        "components": [
+            {
+                "parentId": null,
+                "id": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                "sourceTypeId": "metafx-panel-card",
+                "model": {
+                    "guid": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                    "title": "Downloads",
+                    "id": "metafx-panel-card-42b8f",
+                    "bodyComponents": [
+                        {
+                            "id": "d52bc555-7fa5-4f2e-a489-1ce407541918",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "d52bc555-7fa5-4f2e-a489-1ce407541918",
+                                "id": "rowExportAllCustomBAQs",
+                                "labelText": "ExportAllCustomBAQs"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "8831fa29-6c81-4fd0-a31a-3cc55c024951",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "8831fa29-6c81-4fd0-a31a-3cc55c024951",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportAllCustomBAQs",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "d52bc555-7fa5-4f2e-a489-1ce407541918",
+                                    "components": [
+                                        {
+                                            "id": "f1fe3052-e11f-450f-84c2-3157fba6df96",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "f1fe3052-e11f-450f-84c2-3157fba6df96",
+                                                "labelText": "Download",
+                                                "id": "btnExportAllCustomBAQs"
+                                            },
+                                            "parentId": "f1fe3052-e11f-450f-84c2-3157fba6df96",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "e46e0b25-ff15-4b7e-9ebd-fd03e9b52686",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "e46e0b25-ff15-4b7e-9ebd-fd03e9b52686",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportAllCustomBAQs"
+                                    },
+                                    "parentId": "d52bc555-7fa5-4f2e-a489-1ce407541918",
+                                    "components": [
+                                        {
+                                            "id": "6a6d8e35-3ada-41ae-a3be-ddd47c97c93e",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "6a6d8e35-3ada-41ae-a3be-ddd47c97c93e",
+                                                "labelText": "This plugin downloads all custom BAQs.",
+                                                "id": "txtExportAllCustomBAQsDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "6a6d8e35-3ada-41ae-a3be-ddd47c97c93e",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "367530f3-8706-4f37-a61d-70b8b478f76d",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "367530f3-8706-4f37-a61d-70b8b478f76d",
+                                "id": "rowExportAllFunctionLibraries",
+                                "labelText": "ExportAllFunctionLibraries"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "6d2b6cd6-6d2f-4efc-b6a6-94e85105565d",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "6d2b6cd6-6d2f-4efc-b6a6-94e85105565d",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportAllFunctionLibraries",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "367530f3-8706-4f37-a61d-70b8b478f76d",
+                                    "components": [
+                                        {
+                                            "id": "8383ab8d-91af-48de-89b4-4286c4aa4018",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "8383ab8d-91af-48de-89b4-4286c4aa4018",
+                                                "labelText": "Download",
+                                                "id": "btnExportAllFunctionLibraries"
+                                            },
+                                            "parentId": "8383ab8d-91af-48de-89b4-4286c4aa4018",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "7cfcf13f-3a9d-4291-8e10-e048fa757f1e",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "7cfcf13f-3a9d-4291-8e10-e048fa757f1e",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportAllFunctionLibraries"
+                                    },
+                                    "parentId": "367530f3-8706-4f37-a61d-70b8b478f76d",
+                                    "components": [
+                                        {
+                                            "id": "2c4ed096-c8b6-4d9b-8220-bd293270e38a",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "2c4ed096-c8b6-4d9b-8220-bd293270e38a",
+                                                "labelText": "This plugin downloads all Function Libraries.",
+                                                "id": "txtExportAllFunctionLibrariesDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "2c4ed096-c8b6-4d9b-8220-bd293270e38a",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "3f32cbc8-d3c0-45a4-9226-db58d9ab11fe",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "3f32cbc8-d3c0-45a4-9226-db58d9ab11fe",
+                                "id": "rowExportAllUDCodes",
+                                "labelText": "ExportAllUDCodes"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "c4a6e44a-2968-4051-98b9-1a47f83cbd71",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "c4a6e44a-2968-4051-98b9-1a47f83cbd71",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportAllUDCodes",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "3f32cbc8-d3c0-45a4-9226-db58d9ab11fe",
+                                    "components": [
+                                        {
+                                            "id": "c4386dc7-dcb4-46bf-b1e9-bb5fec53c42b",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "c4386dc7-dcb4-46bf-b1e9-bb5fec53c42b",
+                                                "labelText": "Download",
+                                                "id": "btnExportAllUDCodes"
+                                            },
+                                            "parentId": "c4386dc7-dcb4-46bf-b1e9-bb5fec53c42b",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "94e283ed-bc24-4d1a-aeec-2c6b21910cd0",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "94e283ed-bc24-4d1a-aeec-2c6b21910cd0",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportAllUDCodes"
+                                    },
+                                    "parentId": "3f32cbc8-d3c0-45a4-9226-db58d9ab11fe",
+                                    "components": [
+                                        {
+                                            "id": "5f9bd722-3530-4047-b957-c3e7ae89b05a",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "5f9bd722-3530-4047-b957-c3e7ae89b05a",
+                                                "labelText": "This plugin exports all UD Codes. (User Codes)",
+                                                "id": "txtExportAllUDCodesDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "5f9bd722-3530-4047-b957-c3e7ae89b05a",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "583cbebc-45a2-4df7-b57a-36e824f0748e",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "583cbebc-45a2-4df7-b57a-36e824f0748e",
+                                "id": "rowExportDataDirectivesByTable",
+                                "labelText": "ExportDataDirectivesByTable"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "8a02fad0-1d8c-4651-a89a-2697fea1bb25",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "8a02fad0-1d8c-4651-a89a-2697fea1bb25",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportDataDirectivesByTable",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "583cbebc-45a2-4df7-b57a-36e824f0748e",
+                                    "components": [
+                                        {
+                                            "id": "db6f90b1-b5b1-4c95-b0b7-0975530c983d",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "db6f90b1-b5b1-4c95-b0b7-0975530c983d",
+                                                "labelText": "Download",
+                                                "id": "btnExportDataDirectivesByTable"
+                                            },
+                                            "parentId": "db6f90b1-b5b1-4c95-b0b7-0975530c983d",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "be8821d8-6e1f-4f09-a7a5-5a16eba47eb0",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "be8821d8-6e1f-4f09-a7a5-5a16eba47eb0",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportDataDirectivesByTable"
+                                    },
+                                    "parentId": "583cbebc-45a2-4df7-b57a-36e824f0748e",
+                                    "components": [
+                                        {
+                                            "id": "b410145c-45d3-4ea4-8585-1fb0f1015049",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "b410145c-45d3-4ea4-8585-1fb0f1015049",
+                                                "labelText": "This plugin downloads all Data Directives by \"Table\".",
+                                                "id": "txtExportDataDirectivesByTableDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "b410145c-45d3-4ea4-8585-1fb0f1015049",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "6188857e-2d60-4974-83a2-dfd8f27dee35",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "6188857e-2d60-4974-83a2-dfd8f27dee35",
+                                "id": "rowExportDirectivesByGroups",
+                                "labelText": "ExportDirectivesByGroups"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "f93ba304-a937-4bed-9587-797e0b9bba5b",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "f93ba304-a937-4bed-9587-797e0b9bba5b",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportDirectivesByGroups",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "6188857e-2d60-4974-83a2-dfd8f27dee35",
+                                    "components": [
+                                        {
+                                            "id": "6f02f787-fdc7-4ef8-9a78-8e29bb07677a",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "6f02f787-fdc7-4ef8-9a78-8e29bb07677a",
+                                                "labelText": "Download",
+                                                "id": "btnExportDirectivesByGroups"
+                                            },
+                                            "parentId": "6f02f787-fdc7-4ef8-9a78-8e29bb07677a",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "96d869ee-42d5-4c37-875e-dd084a436870",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "96d869ee-42d5-4c37-875e-dd084a436870",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportDirectivesByGroups"
+                                    },
+                                    "parentId": "6188857e-2d60-4974-83a2-dfd8f27dee35",
+                                    "components": [
+                                        {
+                                            "id": "14cd63f5-eceb-44ed-aad2-d26ff2177d8d",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "14cd63f5-eceb-44ed-aad2-d26ff2177d8d",
+                                                "labelText": "This plugin downloads all Method AND Data Directives by \"Group\".",
+                                                "id": "txtExportDirectivesByGroupsDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "14cd63f5-eceb-44ed-aad2-d26ff2177d8d",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        },
+                        {
+                            "id": "8683c36a-037d-4274-8977-bda5752765bc",
+                            "sourceTypeId": "metafx-div",
+                            "model": {
+                                "guid": "8683c36a-037d-4274-8977-bda5752765bc",
+                                "id": "rowExportMethodDirectivesByService",
+                                "labelText": "ExportMethodDirectivesByService"
+                            },
+                            "parentId": "42b8f86a-e989-476f-bd72-c27b58f14dad",
+                            "components": [
+                                {
+                                    "id": "31dc605d-89dd-4306-bce8-22c83611492f",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "31dc605d-89dd-4306-bce8-22c83611492f",
+                                        "flexBasis": "25%",
+                                        "id": "lcExportMethodDirectivesByService",
+                                        "orientation": "horizontal"
+                                    },
+                                    "parentId": "8683c36a-037d-4274-8977-bda5752765bc",
+                                    "components": [
+                                        {
+                                            "id": "9cd30016-e3f6-4fc8-a363-157821f3fb11",
+                                            "sourceTypeId": "erp-button",
+                                            "model": {
+                                                "guid": "9cd30016-e3f6-4fc8-a363-157821f3fb11",
+                                                "labelText": "Download",
+                                                "id": "btnExportMethodDirectivesByService"
+                                            },
+                                            "parentId": "9cd30016-e3f6-4fc8-a363-157821f3fb11",
+                                            "components": []
+                                        }
+                                    ]
+                                },
+                                {
+                                    "id": "666e6ff3-431a-4a14-86de-a3eb90592f37",
+                                    "sourceTypeId": "metafx-col",
+                                    "model": {
+                                        "guid": "666e6ff3-431a-4a14-86de-a3eb90592f37",
+                                        "flexBasis": "75%",
+                                        "id": "rcExportMethodDirectivesByService"
+                                    },
+                                    "parentId": "8683c36a-037d-4274-8977-bda5752765bc",
+                                    "components": [
+                                        {
+                                            "id": "396d9630-1685-4f0f-8752-039c4c34a339",
+                                            "sourceTypeId": "erp-text-box",
+                                            "model": {
+                                                "guid": "396d9630-1685-4f0f-8752-039c4c34a339",
+                                                "labelText": "This plugin downloads all Method Directives by \"Service\".",
+                                                "id": "txtExportMethodDirectivesByServiceDescription",
+                                                "personalizable": false,
+                                                "customizable": false,
+                                                "disabled": true,
+                                                "width": 1000
+                                            },
+                                            "parentId": "396d9630-1685-4f0f-8752-039c4c34a339",
+                                            "components": []
+                                        }
+                                    ]
+                                }
+                            ]
+                        }
+                    ]
+                },
+                "layoutData": {
+                    "flexLayout": true,
+                    "hostId": "App"
+                }
+            }
+        ],
+        "navigation": {
+            "dataSetId": "",
+            "pageCaption": "",
+            "tabId": "",
+            "enable": false,
+            "parentPage": "",
+            "epBinding": "",
+            "epBindingLevel": 0,
+            "epBindingPeerOrder": 0
+        },
+        "width": 1440
+    },
+    "Events": [
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportAllCustomBAQs"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportAllCustomBAQs",
+                        "clientPath": "ExportAllCustomBAQs.zip"
+                    }
+                }
+            ],
+            "id": "btnExportAllCustomBAQs_onClick",
+            "customizable": true,
+            "disable": false
+        },
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportAllFunctionLibraries"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportAllFunctionLibraries",
+                        "clientPath": "ExportAllFunctionLibraries.zip"
+                    }
+                }
+            ],
+            "id": "btnExportAllFunctionLibraries_onClick",
+            "customizable": true,
+            "disable": false
+        },
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportAllUDCodes"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportAllUDCodes",
+                        "clientPath": "ExportAllUDCodes.zip"
+                    }
+                }
+            ],
+            "id": "btnExportAllUDCodes_onClick",
+            "customizable": true,
+            "disable": false
+        },
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportDataDirectivesByTable"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportDataDirectivesByTable",
+                        "clientPath": "ExportDataDirectivesByTable.zip"
+                    }
+                }
+            ],
+            "id": "btnExportDataDirectivesByTable_onClick",
+            "customizable": true,
+            "disable": false
+        },
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportDirectivesByGroups"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportDirectivesByGroups",
+                        "clientPath": "ExportDirectivesByGroups.zip"
+                    }
+                }
+            ],
+            "id": "btnExportDirectivesByGroups_onClick",
+            "customizable": true,
+            "disable": false
+        },
+        {
+            "trigger": {
+                "hook": "onClick",
+                "type": "Control",
+                "target": "btnExportMethodDirectivesByService"
+            },
+            "actions": [
+                {
+                    "type": "file-transfer-erp",
+                    "param": {
+                        "specialFolder": 5,
+                        "transferType": "download",
+                        "company": "COMPANY",
+                        "serverPath": "EATT://ExportMethodDirectivesByService",
+                        "clientPath": "ExportMethodDirectivesByService.zip"
+                    }
+                }
+            ],
+            "id": "btnExportMethodDirectivesByService_onClick",
+            "customizable": true,
+            "disable": false
+        }
+    ],
+    "ToolBar": [],
+    "DataViews": [],
+    "Rules": [],
+    "References": null,
+    "Pages": [],
+    "Properties": null,
+    "Wasm": null,
+    "IsLayerDisabled": false,
+    "ConfiguratorInfo": null,
+    "ApplicationStrings": null,
+    "ServerErrorCode": null,
+    "ServerErrors": null,
+    "Orphans": []
+}
