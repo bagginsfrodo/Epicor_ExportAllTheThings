@@ -1,12 +1,12 @@
 /*
 * ==========================================================================================
-* AUTHOR:    Kevin Lincecum
-* COPYRIGHT: Kevin Lincecum 2024
+* AUTHOR:    Kevin Barrow
+* COPYRIGHT: Kevin Barrow 2026
 * LICENSE:   MIT
 * ==========================================================================================
 * Library:     ExportAllTheThings
 * Function:    ExportAllKineticCustomLayers
-* Description: This plugin downloads all custom Kinetic layers.
+* Description: This plugin downloads all custom Kinetic layers (Base Apps).
 * ==========================================================================================
 * 
 * INPUTS: NONE
@@ -18,6 +18,7 @@
 *
 * CHANGELOG:
 * 09/04/2024 | klincecum | Kevin Lincecum | Initial Implementation
+* 01/21/2026 | kbarrow   | Kevin Barrow   | Refactored to use Core_ExportKineticMetaFX
 *
 * ==========================================================================================
 */
@@ -37,32 +38,25 @@
   
      CallService<Ice.Contracts.MetaFXSvcContract>(metaFX =>
      {
-        //Create a request to list the apps       
-        var request = new Epicor.MetaFX.Core.Models.Applications.ApplicationRequest()
+        // Configuration for Custom Base Apps
+        var config = new 
         {
-            Type = "view",
-            SubType = "",
-            SearchText = "",
-            IncludeAllLayers = true
+            ExportBaseApps = true,
+            ExportLayers = false,
+            SystemFlag = false
         };
-
-        //Get a list of apps
-        List<Epicor.MetaFX.Core.Models.Applications.Application> applications = metaFX.GetApplications(request);
         
-        //Create an export request list 
-        List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication> applicationList = new List<Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication>();
-
-        //Loop through the list and add custom apps to the export list
-        foreach(var item in applications.Where(x => x.SystemFlag == false))
-        {
-            applicationList.Add(new Epicor.MetaFX.Core.Models.Layers.EpMetaFxLayerForApplication() { Id = item.Id });
-        }
+        string configJson = JsonConvert.SerializeObject(config);
         
-        //Export the apps and return the zip file data as a Base64 encoded string.
-        ZipBase64 = metaFX.ExportLayers(applicationList);
+        // Call Centralized Core Function
+        string resultJson = ThisLib.Core_ExportKineticMetaFX(configJson);
+        
+        dynamic result = JsonConvert.DeserializeObject(resultJson);
+        Success = result.Success;
+        ListErrorJson = result.ListErrorJson;
+        ZipBase64 = result.ZipBase64;
+        
      }); 
-     
-     Success = true;
      
   //****   
   }
